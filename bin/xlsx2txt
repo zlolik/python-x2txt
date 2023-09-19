@@ -1,0 +1,6 @@
+#! /usr/bin/env python
+
+from x2txt import process_xlsx
+
+if __name__ == '__main__':
+    process_xlsx()
