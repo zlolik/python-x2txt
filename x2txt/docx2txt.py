@@ -78,7 +78,7 @@ def xml2text(xml):
     return text
 
 
-def process(docx, img_dir=None):
+def text_from_docx(docx, img_dir=None):
     text = u''
 
     # unzip the docx in memory
@@ -115,8 +115,11 @@ def process(docx, img_dir=None):
     zipf.close()
     return text.strip()
 
+def process_docx():
+    args = process_args()
+    text = text_from_docx(args.docx, args.img_dir)
+    output = getattr(stdout, 'buffer', stdout)
+    output.write(text.encode('utf-8'))
 
 if __name__ == '__main__':
-    args = process_args()
-    text = process(args.docx, args.img_dir)
-    sys.stdout.write(text.encode('utf-8'))
+   process_docx()
