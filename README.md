@@ -1,15 +1,11 @@
-# python-docx2txt #
+## python-x2txt
 
-A pure python-based utility to extract text from docx files. 
+Utilities to extract text from docx and xlsx files. 
 
-The code is taken and adapted from [python-docx](https://github.com/python-openxml/python-docx). It can however also extract text from header, footer and hyperlinks. __It can now also extract images.__ 
+The code is taken and adapted from [python-docx2txt](https://github.com/ankushshah89/python-docx2txt).
 
-## How to install? ##
-```bash
-pip install docx2txt
-```
 
-## How to run? ##
+## Text from docx
 
 a. From command line:
 ```bash
@@ -20,11 +16,23 @@ docx2txt -i /tmp/img_dir file.docx
 ```
 b. From python:
 ```python
-import docx2txt
-
+from x2txt import text_from_docx
 # extract text
-text = docx2txt.process("file.docx")
-
+text = text_from_docx("file.docx")
 # extract text and write images in /tmp/img_dir
-text = docx2txt.process("file.docx", "/tmp/img_dir") 
+text = text_from_docx("file.docx", "/tmp/img_dir") 
+```
+
+## Text from xlsx
+
+a. From command line:
+```bash
+# extract text
+xlsx2txt file.xlsx
+```
+b. From python:
+```python
+from x2txt import text_from_xlsx
+# extract text
+text = text_from_xlsx("file.xlsx")
 ```
