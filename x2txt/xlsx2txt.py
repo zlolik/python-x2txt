@@ -6,7 +6,7 @@ from decimal import Decimal, InvalidOperation
 from os import path
 from sys import stdout, exit
 
-def text_from_excel(xlsx):
+def text_from_xlsx(xlsx):
 	# read as rows
 	wb = load_workbook(filename=xlsx, data_only=True)
 	text = u''
@@ -44,7 +44,7 @@ def process_xlsx():
 		print('File {} does not exist.'.format(args.xlsx))
 		exit(1)
 
-	text = text_from_excel(args.xlsx)
+	text = text_from_xlsx(args.xlsx)
 	output = getattr(stdout, 'buffer', stdout)
 	output.write(text.encode('utf-8'))
 
