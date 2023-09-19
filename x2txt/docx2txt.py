@@ -1,18 +1,19 @@
 #! /usr/bin/env python
 
-import argparse
-import re
-import xml.etree.ElementTree as ET
-import zipfile
-import os
-import sys
+from argparse import ArgumentParser
+from re import match
+from xml.etree.ElementTree import fromstring
+from zipfile import ZipFile
+import os.path
+from os import makedirs
+from sys import exit, stdout
 
 
 nsmap = {'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'}
 
 
 def process_args():
-    parser = argparse.ArgumentParser(description='A pure python-based utility '
+    parser = ArgumentParser(description='A pure python-based utility '
                                                  'to extract text and images '
                                                  'from docx files.')
     parser.add_argument("docx", help="path of the docx file")
@@ -23,15 +24,15 @@ def process_args():
 
     if not os.path.exists(args.docx):
         print('File {} does not exist.'.format(args.docx))
-        sys.exit(1)
+        exit(1)
 
     if args.img_dir is not None:
         if not os.path.exists(args.img_dir):
             try:
-                os.makedirs(args.img_dir)
+                makedirs(args.img_dir)
             except OSError:
                 print("Unable to create img_dir {}".format(args.img_dir))
-                sys.exit(1)
+                exit(1)
     return args
 
 
@@ -56,7 +57,7 @@ def xml2text(xml):
     """
     is_tc = False
     text = u''
-    root = ET.fromstring(xml)
+    root = fromstring(xml)
     for child in root.iter():
         #print(child.tag)
         if child.tag == qn('w:t'):
@@ -81,14 +82,14 @@ def process(docx, img_dir=None):
     text = u''
 
     # unzip the docx in memory
-    zipf = zipfile.ZipFile(docx)
+    zipf = ZipFile(docx)
     filelist = zipf.namelist()
 
     # get header text
     # there can be 3 header files in the zip
     header_xmls = 'word/header[0-9]*.xml'
     for fname in filelist:
-        if re.match(header_xmls, fname):
+        if match(header_xmls, fname):
             text += xml2text(zipf.read(fname))
 
     # get main text
@@ -99,7 +100,7 @@ def process(docx, img_dir=None):
     # there can be 3 footer files in the zip
     footer_xmls = 'word/footer[0-9]*.xml'
     for fname in filelist:
-        if re.match(footer_xmls, fname):
+        if match(footer_xmls, fname):
             text += xml2text(zipf.read(fname))
 
     if img_dir is not None:
