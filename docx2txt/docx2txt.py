@@ -54,9 +54,11 @@ def xml2text(xml):
     equivalent.
     Adapted from: https://github.com/python-openxml/python-docx/
     """
+    is_tc = False
     text = u''
     root = ET.fromstring(xml)
     for child in root.iter():
+        #print(child.tag)
         if child.tag == qn('w:t'):
             t_text = child.text
             text += t_text if t_text is not None else ''
@@ -64,8 +66,14 @@ def xml2text(xml):
             text += '\t'
         elif child.tag in (qn('w:br'), qn('w:cr')):
             text += '\n'
-        elif child.tag == qn("w:p"):
-            text += '\n\n'
+        elif child.tag == qn('w:p'):
+            if is_tc: is_tc = False
+            else: text += '\n'
+        elif child.tag == qn('w:tr'):
+            text += '\n'
+        elif child.tag == qn('w:tc'):
+            is_tc = True
+            text += '\t|'
     return text
 
 
